@@ -14,7 +14,7 @@ from openenv.core.env_server.types import State
 
 try:
     # This works when run from the root folder (e.g., Docker & Hugging Face)
-    from server.models import (
+    from Emergency_Dispatch_Optimizer.models import (
         EmergencyDispatchOptimizerAction, 
         EmergencyDispatchOptimizerObservation,
         Incident,
@@ -22,7 +22,7 @@ try:
     )
 except ImportError:
     # This works when run directly from inside the server/ folder
-    from models import (
+    from Emergency_Dispatch_Optimizer.models import (
         EmergencyDispatchOptimizerAction, 
         EmergencyDispatchOptimizerObservation,
         Incident,

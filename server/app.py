@@ -37,11 +37,11 @@ except Exception as e:  # pragma: no cover
 
 try:
     # Absolute imports (Works perfectly for Docker and when running from the root folder)
-    from server.models import EmergencyDispatchOptimizerAction, EmergencyDispatchOptimizerObservation
+    from Emergency_Dispatch_Optimizer.models import EmergencyDispatchOptimizerAction, EmergencyDispatchOptimizerObservation
     from server.Emergency_Dispatch_Optimizer_environment import EmergencyDispatchOptimizerEnvironment
 except ModuleNotFoundError:
     # Local imports (Fallback if your IDE runs the file directly from inside the server folder)
-    from models import EmergencyDispatchOptimizerAction, EmergencyDispatchOptimizerObservation
+    from Emergency_Dispatch_Optimizer.models import EmergencyDispatchOptimizerAction, EmergencyDispatchOptimizerObservation
     from Emergency_Dispatch_Optimizer_environment import EmergencyDispatchOptimizerEnvironment
 
 
@@ -78,9 +78,4 @@ def main(host: str = "0.0.0.0", port: int = 8000):
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=8000)
-    args = parser.parse_args()
-    main(port=args.port)
+    main()

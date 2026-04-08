@@ -16,10 +16,10 @@ from typing import Optional
 from openai import OpenAI
 
 try:
-    from server.models import EmergencyDispatchOptimizerAction
+    from Emergency_Dispatch_Optimizer.models import EmergencyDispatchOptimizerAction
     from server.Emergency_Dispatch_Optimizer_environment import EmergencyDispatchOptimizerEnvironment
 except ImportError:
-    from server.models import EmergencyDispatchOptimizerAction
+    from Emergency_Dispatch_Optimizer.models import EmergencyDispatchOptimizerAction
     from server.Emergency_Dispatch_Optimizer_environment import EmergencyDispatchOptimizerEnvironment
 
 # --- Hackathon Required Environment Variables ---
