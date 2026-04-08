@@ -154,7 +154,7 @@ def run_inference(task_name: str, client: OpenAI) -> None:
     success = total_score >= 0.95 
     
     # Ensure score bounds [0.0, 1.0] just in case of penalties
-    final_score = max(0.0, min(1.0, total_score))
+    final_score = max(0.01, min(0.99, total_score))
     
     log_end(success=success, steps=step_count, score=final_score, rewards=rewards)
 
