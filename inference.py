@@ -23,8 +23,8 @@ except ImportError:
     from server.Emergency_Dispatch_Optimizer_environment import EmergencyDispatchOptimizerEnvironment
 
 # --- Hackathon Required Environment Variables ---
-API_KEY = os.getenv("HF_TOKEN") or os.getenv("API_KEY")
 API_BASE_URL = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
+API_KEY = os.getenv("API_KEY", os.getenv("HF_TOKEN"))
 MODEL_NAME = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct")
 BENCHMARK = "emergency_dispatch_optimizer"
 MAX_STEPS = 8
