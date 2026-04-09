@@ -80,21 +80,25 @@ class EmergencyDispatchOptimizerEnvironment(Environment):
             ]
             self.max_steps = 5
 
-        # --- Task 3: Hard (Dynamic time arrivals) ---
+# --- Task 3: Hard (Long-Running dynamic arrivals & Resource Management) ---
         else: 
             self.incidents = [
                 Incident(id="inc_1", type="police", severity=2, step_arrived=0),
-                # This fire incident won't be visible until step 1!
-                Incident(id="inc_2", type="fire", severity=5, step_arrived=1) 
+                Incident(id="inc_2", type="medical", severity=3, step_arrived=2),
+                Incident(id="inc_3", type="fire", severity=5, step_arrived=4),
+                Incident(id="inc_4", type="police", severity=4, step_arrived=6),
+                Incident(id="inc_5", type="medical", severity=5, step_arrived=8)
             ]
             self.units = [
                 Unit(id="u_1", type="police_car"),
-                Unit(id="u_2", type="fire_truck")
+                Unit(id="u_2", type="ambulance"),
+                Unit(id="u_3", type="fire_truck")
             ]
-            self.max_steps = 6
+            # Extended steps to allow units time to handle calls and return
+            self.max_steps = 15
 
         # Pre-calculate total severity for 0.0 to 1.0 Reward Normalization
-        self.total_severity = sum(i.severity for i in self.incidents)
+        self.total_severity = max(1.0, sum(i.severity for i in self.incidents))
 
         return self._get_observation(
             feedback=f"Environment reset to {self.task_name} task. Ready for dispatch.",
@@ -107,6 +111,12 @@ class EmergencyDispatchOptimizerEnvironment(Environment):
         self._state.step_count += 1
         reward = 0.0
         feedback = ""
+
+        for unit in self.units:
+            if not unit.is_available and self._state.step_count >= unit.busy_until_step:
+                unit.is_available = True
+                feedback += f"[{unit.id} returned to station] "
+
 
         # Only show incidents that have "arrived" by the current step
         active_incidents = [
@@ -144,10 +154,11 @@ class EmergencyDispatchOptimizerEnvironment(Environment):
                     if match_map[incident.type] == unit.type:
                         incident.is_resolved = True
                         unit.is_available = False
+                        # Unit takes 3 steps to complete the job and return
+                        unit.busy_until_step = self._state.step_count + 3 
                         
-                        # Meaningful partial reward normalized to 1.0 max!
                         reward = incident.severity / self.total_severity
-                        feedback = f"Success! Dispatched {unit.id} to {incident.id}."
+                        feedback += f"Success! Dispatched {unit.id} to {incident.id}. It will return at step {unit.busy_until_step}."
                     else:
                         feedback = f"Failure: {incident.type} needs {match_map[incident.type]}, got {unit.type}."
                         reward = -0.1 # Strong penalty for sending wrong unit
